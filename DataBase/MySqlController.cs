@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +12,14 @@ namespace DataBase
 {
     class MySqlController
     {
-        MySqlConnection conn = null;
-        DataGridView grid = null;
+        private MySqlConnection conn = null;
+        private DataGridView grid = null;
+        private List<string> listOfCommands;
 
         public MySqlController(MySqlConnection conn,DataGridView grid) {
             this.conn = conn;
             this.grid = grid;
+            listOfCommands = new List<string>();
         }
 
         public bool loadTable(string nameOfTable)
@@ -55,6 +58,58 @@ namespace DataBase
                 return false;
             }
             return true;
+        }
+        public void addCommand(string command) {
+            listOfCommands.Add(command);
+        }
+       
+        public bool RunTransactions()
+        {
+            if (listOfCommands.Count == 0)
+            {
+                return true;
+            }
+            if (conn.State.ToString() != ConnectionState.Open.ToString()) {
+                conn.Open();
+            }
+            MySqlCommand myCommand = conn.CreateCommand();
+            MySqlTransaction myTrans;
+            myTrans = conn.BeginTransaction();
+            myCommand.Connection = conn;
+            myCommand.Transaction = myTrans;
+
+            try
+            {
+                foreach (String s in listOfCommands) {
+                    myCommand.CommandText = s;
+                    myCommand.ExecuteNonQuery();
+                }
+                myTrans.Commit();
+                Console.WriteLine("Both records are written to database.");
+                listOfCommands.Clear();
+                return true;
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    myTrans.Rollback();
+                }
+                catch (SqlException ex)
+                {
+                    if (myTrans.Connection != null)
+                    {
+                        Console.WriteLine("An exception of type " + ex.GetType() +
+                        " was encountered while attempting to roll back the transaction.");
+                    }
+                }
+
+                Console.WriteLine("An exception of type " + e.GetType() +
+                " was encountered while inserting the data.");
+                Console.WriteLine("Neither record was written to database.");
+                listOfCommands.Clear();
+                return false;
+            }
         }
     }
 }
