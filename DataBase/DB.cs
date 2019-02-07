@@ -15,7 +15,7 @@ namespace DataBase
     public partial class DB : Form
     {
         private MySqlController controller = null;
-        private string selectedItem;
+        private string selectedItem = "";
         private string previousValue;
 
         public DB(MySqlConnection conn)
@@ -65,13 +65,26 @@ namespace DataBase
             }
         }
 
+        private void editMode(bool b)
+        {
+            button1.Enabled = !b;
+            button2.Enabled = b;
+            button3.Enabled = b;
+            button4.Enabled = b;
+
+            dataGridView1.ReadOnly = !b;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
-            button1.Enabled = false;
-            button2.Enabled = true;
-            button3.Enabled = true;
-
-            dataGridView1.ReadOnly = false;
+            if (selectedItem == "")
+            {
+                MessageBox.Show("Select table!");
+            }
+            else
+            {
+                editMode(true);
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -103,30 +116,7 @@ namespace DataBase
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-          string request = "Update " + listBox1.SelectedItem.ToString() +
-                " set " + dataGridView1.Columns[e.ColumnIndex].HeaderText +
-                " = '" + dataGridView1[e.ColumnIndex, e.RowIndex].Value.ToString() + "' where";
-
-            string temp = "";
-
-            foreach (DataGridViewColumn col in dataGridView1.Columns) {
-                if (col.ToString() == dataGridView1.Columns[e.ColumnIndex].ToString()) {
-
-                    temp += " " + col.HeaderText + getByType(previousValue);
-                }
-                else
-                {
-                    temp += " " + col.HeaderText + getByType(dataGridView1[col.Index, e.RowIndex].Value.ToString()); 
-                }
-                if (col.Index != dataGridView1.Columns.Count - 1)
-                {
-                    temp += " And ";
-                }
-            }
-            request += temp;
-            request += ";";
-            Console.WriteLine(request);
-            controller.addCommand(request);
+            controller.addCommand(createCommand(e,"Update"));
         }
 
         private void dataGridView1_CellEnter(object sender, DataGridViewCellEventArgs e)
@@ -140,6 +130,59 @@ namespace DataBase
             if (!controller.loadTable(selectedItem)) {
                 MessageBox.Show("Can't upadte table");
             }
+            editMode(false);
+        }
+
+        private string createCommand(DataGridViewCellEventArgs e,string command) {
+            string request = "";
+            if (command.Equals("Update", StringComparison.InvariantCultureIgnoreCase))
+            {
+                request = "Update " + listBox1.SelectedItem.ToString() +
+                               " set " + dataGridView1.Columns[e.ColumnIndex].HeaderText
+                               + getByType(dataGridView1[e.ColumnIndex, e.RowIndex].Value.ToString());
+            }
+            else if (command.Equals("Delete", StringComparison.InvariantCultureIgnoreCase))
+            {
+                request = "Delete from " + listBox1.SelectedItem.ToString();
+            }
+            else {
+                return "";
+            }
+
+           request += " where";
+
+        string temp = "";
+
+            foreach (DataGridViewColumn col in dataGridView1.Columns) {
+                if (col.ToString() == dataGridView1.Columns[e.ColumnIndex].ToString()) {
+
+                    temp += " " + col.HeaderText + getByType(previousValue);
+    }
+                else
+                {
+                    temp += " " + col.HeaderText + getByType(dataGridView1[col.Index, e.RowIndex].Value.ToString());
+}
+                if (col.Index != dataGridView1.Columns.Count - 1)
+                {
+                    temp += " And ";
+                }
+            }
+            request += temp;
+            request += ";";
+            Console.WriteLine(request);
+            return request;
+        }
+
+        private void dataGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            DataGridViewCellEventArgs dataGridViewCellEventArgs = new DataGridViewCellEventArgs(0, e.Row.Index);
+            controller.addCommand(createCommand(dataGridViewCellEventArgs, "Delete"));
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Insert insert = new Insert(dataGridView1.Columns);
+            insert.ShowDialog();
         }
     }
 }

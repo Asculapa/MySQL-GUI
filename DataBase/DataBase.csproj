@@ -52,11 +52,17 @@
     <Compile Include="DB.Designer.cs">
       <DependentUpon>DB.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
+    <Compile Include="Authentication.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Authentication.Designer.cs">
+      <DependentUpon>Authentication.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Insert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Insert.Designer.cs">
+      <DependentUpon>Insert.cs</DependentUpon>
     </Compile>
     <Compile Include="MySqlController.cs" />
     <Compile Include="Program.cs" />
@@ -64,8 +70,11 @@
     <EmbeddedResource Include="DB.resx">
       <DependentUpon>DB.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Authentication.resx">
+      <DependentUpon>Authentication.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Insert.resx">
+      <DependentUpon>Insert.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
