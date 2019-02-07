@@ -62,7 +62,62 @@ namespace DataBase
         public void addCommand(string command) {
             listOfCommands.Add(command);
         }
-       
+
+        public void backup() {
+            MySqlCommand mySql = new MySqlCommand();
+            mySql.Connection = conn;
+
+            if (conn.State != ConnectionState.Open) {
+                conn.Open();
+            }
+
+            MySqlBackup backup = new MySqlBackup(mySql);
+            var folderBrowserDialog1 = new FolderBrowserDialog();
+            DialogResult result = folderBrowserDialog1.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                string folderName = folderBrowserDialog1.SelectedPath;
+                try
+                {
+                    backup.ExportToFile(folderName + "MySqlDataBase.sql");
+                }
+                catch(Exception ex) {
+                    Console.WriteLine(ex.ToString());
+                    MessageBox.Show("Error!");
+                }
+
+            }
+        }
+
+        public void import()
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            MySqlCommand mySql = new MySqlCommand();
+
+            mySql.Connection = conn;
+
+            if (conn.State != ConnectionState.Open)
+            {
+                conn.Open();
+            }
+
+            MySqlBackup backup = new MySqlBackup(mySql);
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string selectedFileName = openFileDialog1.FileName;
+                try
+                {
+                    backup.ImportFromFile(selectedFileName);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    MessageBox.Show("Error!");
+                }
+            }
+        }
+
         public bool RunTransactions()
         {
             if (listOfCommands.Count == 0)

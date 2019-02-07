@@ -71,6 +71,8 @@ namespace DataBase
             button2.Enabled = b;
             button3.Enabled = b;
             button4.Enabled = b;
+            button5.Enabled = !b;
+            button6.Enabled = !b;
 
             dataGridView1.ReadOnly = !b;
         }
@@ -187,6 +189,21 @@ namespace DataBase
                 Console.WriteLine(insert.ReturnValue);
                 controller.loadTable(listBox1.SelectedItem.ToString());
             }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            controller.backup();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            controller.import();
+            controller.loadListView(listBox1);
+            listBox1.ClearSelected();
+            dataGridView1.Rows.Clear();
+            dataGridView1.Refresh();
+            editMode(false);
         }
     }
 }
