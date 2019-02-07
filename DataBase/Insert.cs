@@ -14,12 +14,16 @@ namespace DataBase
     {
         private Dictionary<Label,TextBox> map;
         private int x = 10, y = 20;
-        public Insert(DataGridViewColumnCollection columns)
+        private string tableName;
+        public Insert(DataGridViewColumnCollection columns,string table)
         {
             InitializeComponent();
             map = new Dictionary<Label, TextBox>();
+            tableName = table;
             addComponents(columns);
         }
+
+        public string ReturnValue { get; set; }
 
         private void addComponents(DataGridViewColumnCollection columns) {
 
@@ -41,12 +45,51 @@ namespace DataBase
 
         private void button2_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            string request = "Insert into " + tableName + createInsert("key") + "values" + createInsert("value") + ";";
+            this.ReturnValue = request;
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
 
+        private string createInsert(string keyOrvalue) {
+
+            string request = " (";
+
+            for (int index = 0; index < map.Count; index++)
+            {
+                var item = map.ElementAt(index);
+                Control itemValue;
+                if (keyOrvalue == "key")
+                {
+                    itemValue = item.Key;
+                }
+                else {
+                    itemValue = item.Value;
+
+                }
+
+                if (itemValue.Text != "" && item.Value.Text != "")
+                {
+                    if (index != 0)
+                    {
+                        request += ",";
+                    }
+
+                    request += keyOrvalue == "value"?DB.getByType(itemValue.Text).Substring(3): itemValue.Text;
+                }
+                else {
+                    continue;
+                }
+             
+            }
+            request += ") ";
+            return request;
         }
     }
 }

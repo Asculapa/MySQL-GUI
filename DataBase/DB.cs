@@ -98,7 +98,7 @@ namespace DataBase
             }
         }
 
-        private string getByType(string value) {
+        public static string getByType(string value) {
 
             if (value == "") {
                 return " IS NULL";
@@ -181,8 +181,12 @@ namespace DataBase
 
         private void button4_Click(object sender, EventArgs e)
         {
-            Insert insert = new Insert(dataGridView1.Columns);
-            insert.ShowDialog();
+            Insert insert = new Insert(dataGridView1.Columns,listBox1.SelectedItem.ToString());
+            if (insert.ShowDialog() == DialogResult.OK) {
+                controller.addCommand(insert.ReturnValue);
+                Console.WriteLine(insert.ReturnValue);
+                controller.loadTable(listBox1.SelectedItem.ToString());
+            }
         }
     }
 }
