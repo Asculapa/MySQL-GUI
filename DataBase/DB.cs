@@ -183,7 +183,7 @@ namespace DataBase
 
         private void button4_Click(object sender, EventArgs e)
         {
-            Insert insert = new Insert(dataGridView1.Columns,listBox1.SelectedItem.ToString());
+            Insert insert = new Insert(dataGridView1.Columns,controller,listBox1.SelectedItem.ToString());
             if (insert.ShowDialog() == DialogResult.OK) {
                 controller.addCommand(insert.ReturnValue);
                 Console.WriteLine(insert.ReturnValue);
@@ -204,6 +204,11 @@ namespace DataBase
             dataGridView1.Rows.Clear();
             dataGridView1.Refresh();
             editMode(false);
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

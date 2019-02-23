@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace DataBase
 {
-    class MySqlController
+    public class MySqlController
     {
         private MySqlConnection conn = null;
         private DataGridView grid = null;
@@ -31,6 +31,16 @@ namespace DataBase
             grid.DataSource = DS.Tables[0];
 
             return true;
+        }
+
+        public string getDataBase {
+
+            get{
+                if (conn.State == ConnectionState.Closed) {
+                    conn.Open();
+                }
+                return conn.Database;
+            }
         }
 
         public bool loadListView(ListBox list) {
@@ -87,6 +97,38 @@ namespace DataBase
                     MessageBox.Show("Error!");
                 }
 
+            }
+        }
+
+        public MySqlDataReader getKeys(string table,string sschema) {
+            return executeReader("SELECT TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME, REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME " +
+                "FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE " +
+                "WHERE REFERENCED_TABLE_SCHEMA = '" + sschema + "' " +
+                "And TABLE_NAME = '" + table + "'; ");
+        }
+
+        public MySqlDataReader executeReader(string command)
+        {
+            Console.WriteLine(command);
+            if (conn.State.ToString() != ConnectionState.Open.ToString())
+            {
+                conn.Open();
+            }
+
+            MySqlCommand myCommand = new MySqlCommand(command, conn);
+
+            try
+            {
+                MySqlDataReader dr;
+                dr = myCommand.ExecuteReader();
+                Console.WriteLine("Ok!");
+                return dr;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+                Console.WriteLine("executeReader - Error");
+                return null;
             }
         }
 
