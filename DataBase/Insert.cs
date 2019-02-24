@@ -47,7 +47,7 @@ namespace DataBase
                     foreach (string s in keys[columns[a].HeaderText])
                     {
                         ((ComboBox) box).Items.Add(s);
-                        box.Size = new Size(100,20);
+                        box.Size = new Size(100,18);
                     }
                 }
                 else {

@@ -22,14 +22,17 @@ namespace DataBase
             listOfCommands = new List<string>();
         }
 
-        public bool loadTable(string nameOfTable)
+        public bool loadTable(string nameOfTable, string searchLine)
         {
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM " + nameOfTable + ";", conn);
+            if (searchLine == null) {
+                searchLine = "";
+            }
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM " + nameOfTable + "" + searchLine + ";", conn);
             MySqlDataAdapter mySqlDataAdapter = new MySqlDataAdapter(cmd);
             DataSet DS = new DataSet();
             mySqlDataAdapter.Fill(DS);
             grid.DataSource = DS.Tables[0];
-
             return true;
         }
 
@@ -101,10 +104,17 @@ namespace DataBase
         }
 
         public MySqlDataReader getKeys(string table,string sschema) {
-            return executeReader("SELECT TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME, REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME " +
-                "FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE " +
-                "WHERE REFERENCED_TABLE_SCHEMA = '" + sschema + "' " +
-                "And TABLE_NAME = '" + table + "'; ");
+            string request = "SELECT TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME, REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME " +
+          "FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE " +
+          "WHERE REFERENCED_TABLE_SCHEMA = '" + sschema + "' ";
+            if (table != null) {
+                request += "And TABLE_NAME = '" + table + "'; "; 
+            }
+            else {
+                request += ";";
+            }
+            return executeReader(request);
+
         }
 
         public MySqlDataReader executeReader(string command)

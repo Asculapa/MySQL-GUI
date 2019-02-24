@@ -59,7 +59,7 @@ namespace DataBase
             if (selectedItem == item) { return; }
 
             selectedItem = item;
-            if (!controller.loadTable(selectedItem))
+            if (!controller.loadTable(selectedItem, null))
             {
                 MessageBox.Show("Can't load table " + selectedItem);
             }
@@ -73,6 +73,7 @@ namespace DataBase
             button4.Enabled = b;
             button5.Enabled = !b;
             button6.Enabled = !b;
+            checkBox1.Enabled = !b;
 
             dataGridView1.ReadOnly = !b;
         }
@@ -129,7 +130,7 @@ namespace DataBase
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (!controller.loadTable(selectedItem)) {
+            if (!controller.loadTable(selectedItem,null)) {
                 MessageBox.Show("Can't upadte table");
             }
             editMode(false);
@@ -187,7 +188,7 @@ namespace DataBase
             if (insert.ShowDialog() == DialogResult.OK) {
                 controller.addCommand(insert.ReturnValue);
                 Console.WriteLine(insert.ReturnValue);
-                controller.loadTable(listBox1.SelectedItem.ToString());
+                controller.loadTable(listBox1.SelectedItem.ToString(),null);
             }
         }
 
@@ -208,6 +209,58 @@ namespace DataBase
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
+            DialogResult dialogResult = MessageBox.Show("Attantion! All keys will be changed.\nThis process will be irreversible.", "Edit keys", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                if (checkBox1.Checked)
+                {
+                    replasekeys(true);
+                }
+                else
+                {
+                    replasekeys(false);
+                }
+            }
+        }
+
+        private void replasekeys(bool onCascadeDelete)
+        {
+            MySqlDataReader keys = controller.getKeys(null,controller.getDataBase);
+            string onDelete = "";
+            if (onCascadeDelete)
+            {
+                onDelete = "ON DELETE CASCADE";
+            }
+            while (keys.Read()) {
+
+                string table = keys.GetString("TABLE_NAME");
+                string column = keys.GetString("COLUMN_NAME");
+                string refTable = keys.GetString("REFERENCED_TABLE_NAME");
+                string refColumn = keys.GetString("REFERENCED_COLUMN_NAME");
+                string key = keys.GetString("CONSTRAINT_NAME");
+
+                string newKey = "ALTER TABLE " + table + " ADD CONSTRAINT " + 
+                    key + " FOREIGN KEY (" + column + ") REFERENCES " + 
+                    refTable + "(" + refColumn + ")" + onDelete + ";";
+                string dropKey = "ALTER TABLE " + table + " DROP FOREIGN KEY `" + key + "`;";
+
+                controller.addCommand(dropKey);
+                controller.addCommand(newKey);
+            }
+            keys.Close();
+            controller.RunTransactions();
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (selectedItem == "")
+            {
+                MessageBox.Show("Select table!");
+                return;
+            }
+
+            Search search = new Search(controller,listBox1.SelectedItem.ToString());
+            search.Visible = true;
 
         }
     }
