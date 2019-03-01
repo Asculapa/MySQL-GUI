@@ -54,6 +54,10 @@ namespace DataBase
                 }
                 else
                 {
+                    if (item.Text == "") {
+                        MessageBox.Show("Fill in all the fields!");
+                        return;
+                    }
                     request += item.Text + " ";
                 }
             }

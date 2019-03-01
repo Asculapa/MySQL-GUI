@@ -56,6 +56,7 @@ namespace DataBase
                 }
             }
             catch (Exception ex) {
+                Console.WriteLine(ex.ToString());
                 return false;
             }
             return true;
@@ -68,6 +69,7 @@ namespace DataBase
                 conn.Close();
             }
             catch (Exception ex) {
+                Console.WriteLine(ex.ToString());
                 return false;
             }
             return true;

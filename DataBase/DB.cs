@@ -112,7 +112,7 @@ namespace DataBase
                return " = " + d.ToString();
             }
             catch (Exception ex){
-                Console.WriteLine(value + " is not double");
+                Console.WriteLine(value + " is not double\n" + ex.ToString());
             }
             return " = '" + value + "'";
         }
@@ -207,22 +207,6 @@ namespace DataBase
             editMode(false);
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            DialogResult dialogResult = MessageBox.Show("Attantion! All keys will be changed.\nThis process will be irreversible.", "Edit keys", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes)
-            {
-                if (checkBox1.Checked)
-                {
-                    replasekeys(true);
-                }
-                else
-                {
-                    replasekeys(false);
-                }
-            }
-        }
-
         private void replasekeys(bool onCascadeDelete)
         {
             MySqlDataReader keys = controller.getKeys(null,controller.getDataBase);
@@ -262,6 +246,26 @@ namespace DataBase
             Search search = new Search(controller,listBox1.SelectedItem.ToString());
             search.Visible = true;
 
+        }
+
+        private void checkBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Attantion! All keys will be changed.\nThis process will be irreversible.", "Edit keys", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                if (checkBox1.Checked)
+                {
+                    replasekeys(true);
+                }
+                else
+                {
+                    replasekeys(false);
+                }
+            }
+            else
+            {
+                checkBox1.Checked = false;
+            }
         }
     }
 }
