@@ -31,12 +31,12 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.delLine = new System.Windows.Forms.Button();
+            this.equal = new System.Windows.Forms.ComboBox();
             this.newLine = new System.Windows.Forms.Button();
             this.result = new System.Windows.Forms.TextBox();
             this.columns = new System.Windows.Forms.ComboBox();
             this.mySqlOperator = new System.Windows.Forms.Label();
-            this.equal = new System.Windows.Forms.ComboBox();
-            this.delLine = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,6 +74,26 @@
             this.panel1.Size = new System.Drawing.Size(425, 284);
             this.panel1.TabIndex = 2;
             // 
+            // delLine
+            // 
+            this.delLine.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.delLine.Location = new System.Drawing.Point(395, 16);
+            this.delLine.Name = "delLine";
+            this.delLine.Size = new System.Drawing.Size(27, 21);
+            this.delLine.TabIndex = 5;
+            this.delLine.Text = "-";
+            this.delLine.UseVisualStyleBackColor = true;
+            this.delLine.Click += new System.EventHandler(this.delLine_Click);
+            // 
+            // equal
+            // 
+            this.equal.FormattingEnabled = true;
+            this.equal.Location = new System.Drawing.Point(211, 15);
+            this.equal.Name = "equal";
+            this.equal.Size = new System.Drawing.Size(39, 21);
+            this.equal.TabIndex = 4;
+            this.equal.SelectedIndexChanged += new System.EventHandler(this.Equal_SelectedIndexChanged);
+            // 
             // newLine
             // 
             this.newLine.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -109,25 +129,6 @@
             this.mySqlOperator.Size = new System.Drawing.Size(75, 20);
             this.mySqlOperator.TabIndex = 0;
             this.mySqlOperator.Text = "WHERE";
-            // 
-            // equal
-            // 
-            this.equal.FormattingEnabled = true;
-            this.equal.Location = new System.Drawing.Point(211, 15);
-            this.equal.Name = "equal";
-            this.equal.Size = new System.Drawing.Size(39, 21);
-            this.equal.TabIndex = 4;
-            // 
-            // delLine
-            // 
-            this.delLine.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.delLine.Location = new System.Drawing.Point(395, 16);
-            this.delLine.Name = "delLine";
-            this.delLine.Size = new System.Drawing.Size(27, 21);
-            this.delLine.TabIndex = 5;
-            this.delLine.Text = "-";
-            this.delLine.UseVisualStyleBackColor = true;
-            this.delLine.Click += new System.EventHandler(this.delLine_Click);
             // 
             // Search
             // 

@@ -25,6 +25,11 @@ namespace DataBase
             this.Close();
         }
 
+        private void Equal_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private void delLine_Click(object sender, EventArgs e)
         {
             if (listOfControls.Count <= 3)

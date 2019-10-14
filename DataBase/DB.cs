@@ -8,19 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-using MySql.Data.MySqlClient.X.XDevAPI.Common;
 
 namespace DataBase
 {
     public partial class DB : Form
     {
         private MySqlController controller = null;
+        private MySqlConnection conn = null;
         private string selectedItem = "";
         private string previousValue;
 
         public DB(MySqlConnection conn)
         {
             InitializeComponent();
+            this.conn = conn;
             controller = new MySqlController(conn,dataGridView1);
         }
 
@@ -74,6 +75,7 @@ namespace DataBase
             button5.Enabled = !b;
             button6.Enabled = !b;
             checkBox1.Enabled = !b;
+            button8.Enabled = !b;
 
             dataGridView1.ReadOnly = !b;
         }
@@ -266,6 +268,12 @@ namespace DataBase
             {
                 checkBox1.Checked = false;
             }
+        }
+
+        private void Button8_Click(object sender, EventArgs e)
+        {
+            SQLRequest request = new SQLRequest(conn);
+            request.ShowDialog();
         }
     }
 }
