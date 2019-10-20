@@ -75,7 +75,7 @@ namespace DataBase
             button5.Enabled = !b;
             button6.Enabled = !b;
             checkBox1.Enabled = !b;
-            button8.Enabled = !b;
+            button9.Enabled = !b;
 
             dataGridView1.ReadOnly = !b;
         }
@@ -270,10 +270,10 @@ namespace DataBase
             }
         }
 
-        private void Button8_Click(object sender, EventArgs e)
+        private void Button9_Click(object sender, EventArgs e)
         {
-            SQLRequest request = new SQLRequest(conn);
-            request.ShowDialog();
+            Report report = new Report(conn);
+            report.ShowDialog();
         }
     }
 }

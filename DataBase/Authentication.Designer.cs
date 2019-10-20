@@ -72,7 +72,7 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(105, 20);
             this.textBox3.TabIndex = 3;
-            this.textBox3.Text = "admin";
+            this.textBox3.Text = "root";
             // 
             // textBox4
             // 
